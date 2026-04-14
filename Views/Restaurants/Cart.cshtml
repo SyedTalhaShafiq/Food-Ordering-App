@@ -1,0 +1,142 @@
+﻿@model List<FoodOrderingApp.Models.CartItem>
+
+<h2>Your Cart</h2>
+
+@if (Model != null && Model.Any())
+{
+    var groupedCart = Model.GroupBy(item => item.MenuItem.RestaurantId);
+
+    foreach (var restaurantGroup in groupedCart)
+    {
+        <h3>Restaurant: @restaurantGroup.First().MenuItem.Restaurant.Name</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in restaurantGroup)
+                {
+                    <tr data-item-id="@item.MenuItem.ItemId">
+                        <td>@item.MenuItem.Name</td>
+                        <td>
+                            <input type="number" class="quantity-input" value="@item.Quantity" min="1" style="width: 60px;" data-item-id="@item.MenuItem.ItemId" />
+                        </td>
+                        <td class="item-price" data-price="@(item.MenuItem.Price.HasValue ? item.MenuItem.Price.Value : 0)">
+                            @(item.MenuItem.Price.HasValue ? item.MenuItem.Price.Value.ToString("C") : "N/A")
+                        </td>
+                        <td class="item-total">
+                            @(((item.MenuItem.Price ?? 0) * item.Quantity).ToString("C"))
+                        </td>
+                        <td>
+                            @Html.ActionLink("Remove", "RemoveFromCart", new { itemId = item.MenuItem.ItemId }, new { @class = "btn btn-danger btn-sm" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-right"><strong>Subtotal for @restaurantGroup.First().MenuItem.Restaurant.Name:</strong></td>
+                    <td>
+                        @restaurantGroup.Sum(item => (item.MenuItem.Price ?? 0) * item.Quantity).ToString("C")
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+
+    <h3>Grand Total: <span id="grand-total">@Model.Sum(item => (item.MenuItem.Price ?? 0) * item.Quantity).ToString("C")</span></h3>
+
+    <form method="post" action="@Url.Action("Checkout", "Restaurants")">
+        <label for="deliveryAddress">Delivery Address:</label>
+        <input type="text" id="deliveryAddress" name="deliveryAddress" required />
+        <br />
+        <label for="paymentMethod">Payment Method:</label>
+        <select id="paymentMethod" name="paymentMethod">
+            <option value="Online">Online</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+        </select>
+        <br />
+        <button type="submit" class="btn btn-primary">Checkout</button>
+    </form>
+
+    <p>
+        @Html.ActionLink("Continue Shopping", "Index", "Restaurants", null, new { @class = "btn btn-primary" })
+    </p>
+}
+else
+{
+    <p>Your cart is empty.</p>
+    <p>@Html.ActionLink("Browse Restaurants", "Index", "Restaurants", null, new { @class = "btn btn-primary" })</p>
+}
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // Function to format price to currency
+            function formatCurrency(price) {
+                return price.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
+            }
+
+            // Initial formatting of item totals and grand total
+            $('.item-total').each(function() {
+                var row = $(this).closest('tr');
+                var price = parseFloat(row.find('.item-price').data('price'));
+                var quantity = parseInt(row.find('.quantity-input').val());
+                var total = price * quantity;
+                $(this).text(formatCurrency(total));
+            });
+
+            function updateGrandTotal() {
+                var grandTotal = 0;
+                $('.item-total').each(function() {
+                    var price = parseFloat($(this).closest('tr').find('.item-price').data('price'));
+                    var quantity = parseInt($(this).closest('tr').find('.quantity-input').val());
+                    grandTotal += price * quantity;
+                });
+                $('#grand-total').text(formatCurrency(grandTotal));
+            }
+            updateGrandTotal(); // Initial grand total calculation
+
+            $('.quantity-input').on('change', function () {
+                var itemId = $(this).data('item-id');
+                var newQuantity = parseInt($(this).val());
+
+                if (isNaN(newQuantity) || newQuantity < 1) {
+                    $(this).val(1); // Reset to 1 if invalid
+                    newQuantity = 1;
+                }
+
+                var row = $(this).closest('tr');
+                var price = parseFloat(row.find('.item-price').data('price'));
+                var itemTotalElement = row.find('.item-total');
+
+                var newItemTotal = price * newQuantity;
+                itemTotalElement.text(formatCurrency(newItemTotal));
+
+                updateGrandTotal(); // Update grand total on quantity change
+
+                // Update the cart on the server via AJAX
+                $.ajax({
+                    url: '@Url.Action("UpdateCartItemQuantity", "Restaurants")',
+                    type: 'POST',
+                    data: { itemId: itemId, quantity: newQuantity },
+                    success: function (response) {
+                        // The grand total is now updated client-side, so no need to update from response here
+                        // You might want to handle success messages if needed
+                    },
+                    error: function (error) {
+                        console.error('Error updating cart:', error);
+                        // Optionally, revert the quantity or display an error message
+                    }
+                });
+            });
+        });
+    </script>
+}

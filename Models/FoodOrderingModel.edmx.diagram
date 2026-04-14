@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="479a09e2cdd34a75985d5217ef9968f3" Name="Diagram1">
+        <EntityTypeShape EntityType="FoodOrderingDBModel.MenuItem" Width="1.5" PointX="5.25" PointY="12.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="FoodOrderingDBModel.Notification" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FoodOrderingDBModel.OrderItem" Width="1.5" PointX="7.5" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="FoodOrderingDBModel.Order" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="FoodOrderingDBModel.Restaurant" Width="1.5" PointX="3" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="FoodOrderingDBModel.Review" Width="1.5" PointX="8.25" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FoodOrderingDBModel.User" Width="1.5" PointX="0.75" PointY="6.375" IsExpanded="true" />
+        <AssociationConnector Association="FoodOrderingDBModel.FK__MenuItems__Resta__3F466844" ManuallyRouted="false" />
+        <AssociationConnector Association="FoodOrderingDBModel.FK__OrderItem__ItemI__48CFD27E" ManuallyRouted="false" />
+        <AssociationConnector Association="FoodOrderingDBModel.FK__Notificat__UserI__5165187F" ManuallyRouted="false" />
+        <AssociationConnector Association="FoodOrderingDBModel.FK__OrderItem__Order__47DBAE45" ManuallyRouted="false" />
+        <AssociationConnector Association="FoodOrderingDBModel.FK__Orders__Restaura__440B1D61" ManuallyRouted="false" />
+        <AssociationConnector Association="FoodOrderingDBModel.FK__Orders__UserId__4316F928" ManuallyRouted="false" />
+        <AssociationConnector Association="FoodOrderingDBModel.FK__Restauran__Owner__3B75D760" ManuallyRouted="false" />
+        <AssociationConnector Association="FoodOrderingDBModel.FK__Reviews__Restaur__4CA06362" ManuallyRouted="false" />
+        <AssociationConnector Association="FoodOrderingDBModel.FK__Reviews__UserId__4BAC3F29" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

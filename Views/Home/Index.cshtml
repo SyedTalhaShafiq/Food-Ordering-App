@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<div class="jumbotron text-center" style="padding: 2rem; background-color: #f8f9fa;">
+    <h1 class="display-4">Welcome to FoodieExpress!</h1>
+    <p class="lead">Order your favorite meals from top restaurants near you.</p>
+    <hr class="my-4">
+    <p>Browse our list of restaurants and get started.</p>
+    <a class="btn btn-primary btn-lg" href="@Url.Action("Index", "Restaurants")" role="button">Browse Restaurants</a>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Explore Local Flavors</h2>
+        <p>Discover a wide variety of cuisines from the best restaurants in Karachi. From traditional Pakistani dishes to international flavors, we've got something for every craving.</p>
+        <p><a class="btn btn-outline-secondary btn-sm" href="@Url.Action("Index", "Restaurants")">View Restaurants &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Easy Online Ordering</h2>
+        <p>Our user-friendly platform makes ordering food online quick and hassle-free. Browse menus, customize your order, and pay securely, all from the comfort of your home or office.</p>
+        <p><a class="btn btn-outline-secondary btn-sm" href="#">How to Order &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Fast Delivery to Your Doorstep</h2>
+        <p>Enjoy prompt and reliable delivery service. We partner with efficient delivery providers to ensure your food arrives fresh and on time, right here in Karachi.</p>
+        <p><a class="btn btn-outline-secondary btn-sm" href="#">Track Your Order &raquo;</a></p>
+    </div>
+</div>

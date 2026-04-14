@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FoodOrderingDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="MenuItem">
+    <Key>
+      <PropertyRef Name="ItemId" />
+    </Key>
+    <Property Name="ItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RestaurantId" Type="Int32" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="IsAvailable" Type="Boolean" />
+    <NavigationProperty Name="Restaurant" Relationship="Self.FK__MenuItems__Resta__3F466844" FromRole="MenuItems" ToRole="Restaurants" />
+    <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__ItemI__48CFD27E" FromRole="MenuItems" ToRole="OrderItems" />
+  </EntityType>
+  <EntityType Name="Notification">
+    <Key>
+      <PropertyRef Name="NotificationId" />
+    </Key>
+    <Property Name="NotificationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Message" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="IsRead" Type="Boolean" />
+    <Property Name="SentAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="User" Relationship="Self.FK__Notificat__UserI__5165187F" FromRole="Notifications" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="OrderItem">
+    <Key>
+      <PropertyRef Name="OrderItemId" />
+    </Key>
+    <Property Name="OrderItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OrderId" Type="Int32" />
+    <Property Name="ItemId" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="UnitPrice" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="TotalPrice" Type="Decimal" Precision="21" Scale="2" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="MenuItem" Relationship="Self.FK__OrderItem__ItemI__48CFD27E" FromRole="OrderItems" ToRole="MenuItems" />
+    <NavigationProperty Name="Order" Relationship="Self.FK__OrderItem__Order__47DBAE45" FromRole="OrderItems" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="OrderId" />
+    </Key>
+    <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="RestaurantId" Type="Int32" />
+    <Property Name="OrderDate" Type="DateTime" Precision="3" />
+    <Property Name="TotalAmount" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="DeliveryAddress" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PaymentStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__Order__47DBAE45" FromRole="Orders" ToRole="OrderItems" />
+    <NavigationProperty Name="Restaurant" Relationship="Self.FK__Orders__Restaura__440B1D61" FromRole="Orders" ToRole="Restaurants" />
+    <NavigationProperty Name="User" Relationship="Self.FK__Orders__UserId__4316F928" FromRole="Orders" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Restaurant">
+    <Key>
+      <PropertyRef Name="RestaurantId" />
+    </Key>
+    <Property Name="RestaurantId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Location" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="OwnerId" Type="Int32" />
+    <Property Name="IsActive" Type="Boolean" />
+    <NavigationProperty Name="MenuItems" Relationship="Self.FK__MenuItems__Resta__3F466844" FromRole="Restaurants" ToRole="MenuItems" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__Restaura__440B1D61" FromRole="Restaurants" ToRole="Orders" />
+    <NavigationProperty Name="User" Relationship="Self.FK__Restauran__Owner__3B75D760" FromRole="Restaurants" ToRole="Users" />
+    <NavigationProperty Name="Reviews" Relationship="Self.FK__Reviews__Restaur__4CA06362" FromRole="Restaurants" ToRole="Reviews" />
+  </EntityType>
+  <EntityType Name="Review">
+    <Key>
+      <PropertyRef Name="ReviewId" />
+    </Key>
+    <Property Name="ReviewId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="RestaurantId" Type="Int32" />
+    <Property Name="Rating" Type="Int32" />
+    <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="ReviewDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Restaurant" Relationship="Self.FK__Reviews__Restaur__4CA06362" FromRole="Reviews" ToRole="Restaurants" />
+    <NavigationProperty Name="User" Relationship="Self.FK__Reviews__UserId__4BAC3F29" FromRole="Reviews" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="PasswordHash" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Notifications" Relationship="Self.FK__Notificat__UserI__5165187F" FromRole="Users" ToRole="Notifications" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__UserId__4316F928" FromRole="Users" ToRole="Orders" />
+    <NavigationProperty Name="Restaurants" Relationship="Self.FK__Restauran__Owner__3B75D760" FromRole="Users" ToRole="Restaurants" />
+    <NavigationProperty Name="Reviews" Relationship="Self.FK__Reviews__UserId__4BAC3F29" FromRole="Users" ToRole="Reviews" />
+  </EntityType>
+  <Association Name="FK__MenuItems__Resta__3F466844">
+    <End Role="Restaurants" Type="Self.Restaurant" Multiplicity="0..1" />
+    <End Role="MenuItems" Type="Self.MenuItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Restaurants">
+        <PropertyRef Name="RestaurantId" />
+      </Principal>
+      <Dependent Role="MenuItems">
+        <PropertyRef Name="RestaurantId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OrderItem__ItemI__48CFD27E">
+    <End Role="MenuItems" Type="Self.MenuItem" Multiplicity="0..1" />
+    <End Role="OrderItems" Type="Self.OrderItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MenuItems">
+        <PropertyRef Name="ItemId" />
+      </Principal>
+      <Dependent Role="OrderItems">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Notificat__UserI__5165187F">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Notifications" Type="Self.Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Notifications">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OrderItem__Order__47DBAE45">
+    <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
+    <End Role="OrderItems" Type="Self.OrderItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="OrderId" />
+      </Principal>
+      <Dependent Role="OrderItems">
+        <PropertyRef Name="OrderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__Restaura__440B1D61">
+    <End Role="Restaurants" Type="Self.Restaurant" Multiplicity="0..1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Restaurants">
+        <PropertyRef Name="RestaurantId" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="RestaurantId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__UserId__4316F928">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Restauran__Owner__3B75D760">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Restaurants" Type="Self.Restaurant" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Restaurants">
+        <PropertyRef Name="OwnerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Reviews__Restaur__4CA06362">
+    <End Role="Restaurants" Type="Self.Restaurant" Multiplicity="0..1" />
+    <End Role="Reviews" Type="Self.Review" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Restaurants">
+        <PropertyRef Name="RestaurantId" />
+      </Principal>
+      <Dependent Role="Reviews">
+        <PropertyRef Name="RestaurantId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Reviews__UserId__4BAC3F29">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Reviews" Type="Self.Review" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Reviews">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FoodOrderingDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="MenuItems" EntityType="Self.MenuItem" />
+    <EntitySet Name="Notifications" EntityType="Self.Notification" />
+    <EntitySet Name="OrderItems" EntityType="Self.OrderItem" />
+    <EntitySet Name="Orders" EntityType="Self.Order" />
+    <EntitySet Name="Restaurants" EntityType="Self.Restaurant" />
+    <EntitySet Name="Reviews" EntityType="Self.Review" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK__MenuItems__Resta__3F466844" Association="Self.FK__MenuItems__Resta__3F466844">
+      <End Role="Restaurants" EntitySet="Restaurants" />
+      <End Role="MenuItems" EntitySet="MenuItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OrderItem__ItemI__48CFD27E" Association="Self.FK__OrderItem__ItemI__48CFD27E">
+      <End Role="MenuItems" EntitySet="MenuItems" />
+      <End Role="OrderItems" EntitySet="OrderItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Notificat__UserI__5165187F" Association="Self.FK__Notificat__UserI__5165187F">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Notifications" EntitySet="Notifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OrderItem__Order__47DBAE45" Association="Self.FK__OrderItem__Order__47DBAE45">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="OrderItems" EntitySet="OrderItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__Restaura__440B1D61" Association="Self.FK__Orders__Restaura__440B1D61">
+      <End Role="Restaurants" EntitySet="Restaurants" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__UserId__4316F928" Association="Self.FK__Orders__UserId__4316F928">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Restauran__Owner__3B75D760" Association="Self.FK__Restauran__Owner__3B75D760">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Restaurants" EntitySet="Restaurants" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Reviews__Restaur__4CA06362" Association="Self.FK__Reviews__Restaur__4CA06362">
+      <End Role="Restaurants" EntitySet="Restaurants" />
+      <End Role="Reviews" EntitySet="Reviews" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Reviews__UserId__4BAC3F29" Association="Self.FK__Reviews__UserId__4BAC3F29">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Reviews" EntitySet="Reviews" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

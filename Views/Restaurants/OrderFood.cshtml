@@ -1,0 +1,52 @@
+﻿@model FoodOrderingApp.Models.Restaurant
+
+@{
+    ViewBag.Title = "Order Food - " + Model.Name;
+}
+
+<h2>Order Food - @Model.Name</h2>
+
+@if (Model.MenuItems.Any())
+{
+    @using (Html.BeginForm("AddToCartFromMenu", "Restaurants", FormMethod.Post))
+    {
+        @Html.HiddenFor(model => model.RestaurantId) // To know which restaurant the order is for
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Item</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.MenuItems)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selectedItemIds" value="@item.ItemId" />
+                        </td>
+                        <td>@item.Name</td>
+                        <td>@(item.Price.HasValue ? item.Price.Value.ToString("C") : "N/A")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control" style="width: 80px;">
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Selected to Cart</button>
+    }
+}
+else
+{
+    <p>This restaurant does not have any menu items yet.</p>
+}
+
+<p>
+    @Html.ActionLink("Back to Restaurants", "Index")
+</p>

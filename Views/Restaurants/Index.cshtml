@@ -1,0 +1,70 @@
+﻿@model IEnumerable<FoodOrderingApp.Models.Restaurant>
+
+@{
+    ViewBag.Title = "Browse Restaurants";
+}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        .centered-text {
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Browse Restaurants</h2>
+
+    <p>
+        @if (Request.IsAuthenticated)
+        {
+            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
+        }
+    </p>
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Name)</th>
+                <th>@Html.DisplayNameFor(model => model.Location)</th>
+                <th>@Html.DisplayNameFor(model => model.Description)</th>
+                <th>@Html.DisplayNameFor(model => model.IsActive)</th>
+                <th>@Html.DisplayName("Owner")</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                    <td>
+                        @if (item.IsActive.HasValue && item.IsActive.Value)
+                        {
+                            <span class="badge badge-success centered-text">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger centered-text">No</span>
+                        }
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.User.FullName)</td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = item.RestaurantId }, new { @class = "btn btn-sm btn-info" })
+                        @if (User.Identity.IsAuthenticated && ViewBag.IsAdmin)
+                        {
+                            @Html.Raw(" | ")
+                            @Html.ActionLink("Edit", "Edit", new { id = item.RestaurantId }, new { @class = "btn btn-sm btn-warning" })
+                            @Html.Raw(" | ")
+                            @Html.ActionLink("Delete", "Delete", new { id = item.RestaurantId }, new { @class = "btn btn-sm btn-danger" })
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
